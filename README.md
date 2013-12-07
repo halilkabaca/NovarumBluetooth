@@ -20,53 +20,53 @@ The novarumbluetooth variable is a reference to the Module object.
 ## Reference
 
 
-### ___PROJECTNAMEASIDENTIFIER__.enableBluetooth
+### novarumbluetooth.enableBluetooth
 
 Enables bluetooth adapter
 
-### ___PROJECTNAMEASIDENTIFIER__.disableBluetooth
+### novarumbluetooth.disableBluetooth
 
 Disables bluetooth adapter
 
-### ___PROJECTNAMEASIDENTIFIER__.searchDevices
+### novarumbluetooth.searchDevices
 
 Searches for bluetooth devices
 
-### ___PROJECTNAMEASIDENTIFIER__.getPairedDevices
+### novarumbluetooth.getPairedDevices
 
 Retrieves already paired bluetooth devices. You can connect to them using connect method and providing mac address
 
-### ___PROJECTNAMEASIDENTIFIER__.connect(macadress)
+### novarumbluetooth.connect(macadress)
 
 connects to the device with the given mac address
 
-### ___PROJECTNAMEASIDENTIFIER__.sendData(data)
+### novarumbluetooth.sendData(data)
 
 if device is connected, it sends the given text data to the other end. To receive data,
 you must register nb_onReceiveData event
 
 
-### ___PROJECTNAMEASIDENTIFIER__.isConnected()
+### novarumbluetooth.isConnected()
 
 checks if the device is connected
 
-### ___PROJECTNAMEASIDENTIFIER__.startServer()
+### novarumbluetooth.startServer()
 
 starts server. Note that this functions are not fully implemented yet and may not work
 
-### ___PROJECTNAMEASIDENTIFIER__.stopServer()
+### novarumbluetooth.stopServer()
 
 stops server. Note that this functions are not fully implemented yet and may not work
 
-### ___PROJECTNAMEASIDENTIFIER__.setServerName(name)
+### novarumbluetooth.setServerName(name)
 
 sets the server name. Note that this functions are not fully implemented yet and may not work
 
-### ___PROJECTNAMEASIDENTIFIER__.setUUID(uuid)
+### novarumbluetooth.setUUID(uuid)
 
 sets the uuid will be used. Default is: 00001101-0000-1000-8000-00805F9B34FB
 
-### ___PROJECTNAMEASIDENTIFIER__.makeDiscoverable()
+### novarumbluetooth.makeDiscoverable()
 
 makes the device be discoverable for 300 seconds
 
@@ -102,6 +102,7 @@ Fired when server is started successfully.
 
 
 ## Usage
+
 If you don't want to build it from the source code, please copy the module zip file provided to your project folder.
 Please refer to example app, it covers the main functionality.
 
