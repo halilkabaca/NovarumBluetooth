@@ -1,0 +1,4 @@
+Novarum Bluetooth Module v1.0.0
+
+v1.0.0
+--Main funtionality to connect,send and receive data from bluetooth on client mode

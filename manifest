@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0
+apiversion: 2
+description: Bluetooth module for Appcelerator Titanium
+author: Halil Kabaca (halil.kabaca@novarumsoftware.com)
+license: The MIT License (MIT)
+copyright: Halil Kabaca - Novarum Software & Consulting 2013
+
+
+# these should not be edited
+name: novarumbluetooth
+moduleid: com.novarum.bluetooth
+guid: fd9668e6-5271-465d-8af8-795198adb713
+platform: android
+minsdk: 3.1.1.GA
