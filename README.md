@@ -84,17 +84,9 @@ Fired when a new successfull connection is made
 
 Fired when new data recevied
 
-###nb_onReceiveData
-
-Fired when new data recevied
-
 ###nb_onError
 
 Fired when an error ocurred. Contains the details of the error
-
-###nb_onServerStarted
-
-Fired when server is started successfully.
 
 ###nb_onServerStarted
 
