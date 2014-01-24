@@ -10,6 +10,9 @@
 	    <manifest>
 	      <uses-permission android:name="android.permission.BLUETOOTH"/>
 	      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+	        <application>
+	           <service android:name="com.novarum.bluetooth.BluetoothService" android:exported="true"/>	      
+	        </application>
 	    </manifest>
 	</android>
 	<mobileweb>

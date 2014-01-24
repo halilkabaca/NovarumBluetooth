@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,8 +21,7 @@ import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 
 import org.appcelerator.titanium.TiApplication;
-import org.appcelerator.titanium.util.TiActivityResultHandler;
-import org.appcelerator.titanium.util.TiActivitySupportHelper;
+import org.appcelerator.titanium.util.TiIntentWrapper;
 import org.appcelerator.kroll.common.Log;
 
 import android.app.Activity;
@@ -58,6 +56,8 @@ public class NovarumbluetoothModule extends KrollModule
     public dataReceiver datareceiver;
     public AcceptThread acceptthread;
     public String SERVERNAME                 = "NovarumBluetooth";
+    public static NovarumbluetoothModule staticNovarumbluetoothModule;
+    public boolean useService                = false;
     
 	// You can define constants with @Kroll.constant, for example:
 	// @Kroll.constant public static final String EXTERNAL_NAME = value;
@@ -65,6 +65,7 @@ public class NovarumbluetoothModule extends KrollModule
 	public NovarumbluetoothModule()
 	{
 		super();
+		staticNovarumbluetoothModule = this;
 	}
 
 	@Kroll.onAppCreate
@@ -86,6 +87,14 @@ public class NovarumbluetoothModule extends KrollModule
 		return "hello world";
 	}
 	
+	
+	@Kroll.method
+	public void useService()
+	{
+		Log.d(TAG, "useService called");
+		this.useService = true;
+	}	
+	
 
 	@Kroll.method
 	public boolean searchDevices()
@@ -99,13 +108,11 @@ public class NovarumbluetoothModule extends KrollModule
 		TiApplication appContext = TiApplication.getInstance();
 		Activity activity = appContext.getCurrentActivity();		
 		
-		
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         activity.registerReceiver(myReceiver, intentFilter);
         bluetoothAdapter.cancelDiscovery(); //cancel if it's already searching
         bluetoothAdapter.startDiscovery();		
-		
-		
+	
 		return true;
 	}	
 	
@@ -209,6 +216,11 @@ public class NovarumbluetoothModule extends KrollModule
     	this.fireEvent("nb_DevicesFound", devicelist);     			
 	}
 	
+	public static void sendEvent(String eventname,KrollDict data)
+	{
+		staticNovarumbluetoothModule.fireEvent(eventname, data); 
+	}
+	
 	
 	public boolean pairDevice(BluetoothDevice btDevice)
 	{
@@ -298,26 +310,53 @@ public class NovarumbluetoothModule extends KrollModule
 		if(devicemac == null)
 		   return false;
 		
-		bluetoothDevice = bluetoothAdapter.getRemoteDevice(devicemac);
-		
-		if (bluetoothDevice.getBondState() == BluetoothDevice.BOND_NONE) 
+		//Check if we should use the service//
+		if(useService)
 		{
-			if(pairDevice(bluetoothDevice))
+			
+			//Start Service//
+			try
 			{
+				//Get Current activity//
+				TiApplication appContext = TiApplication.getInstance();
+				Activity activity = appContext.getCurrentActivity();
 				
-				return socketConnect(bluetoothDevice);
+				final TiIntentWrapper barcodeIntent = new TiIntentWrapper(new Intent(activity,BluetoothService.class));
+				barcodeIntent.getIntent().putExtra("MacAddress",devicemac);
+				appContext.startService(barcodeIntent.getIntent());
+				
+				return true;
+			}
+			catch(Exception e)
+			{
+				Log.w(TAG,"error on creating bluetooth service: "+e.getMessage());
+				return false;					
+			}
+			
+			
+		}
+		else
+		{		
+			bluetoothDevice = bluetoothAdapter.getRemoteDevice(devicemac);
+			
+			if (bluetoothDevice.getBondState() == BluetoothDevice.BOND_NONE) 
+			{
+				if(pairDevice(bluetoothDevice))
+				{
+					
+					return socketConnect(bluetoothDevice);
+				}
+				else
+				{
+					postError("Could not pair device");
+					return false;
+				}
 			}
 			else
 			{
-				postError("Could not pair device");
-				return false;
+				return socketConnect(bluetoothDevice);				
 			}
 		}
-		else
-		{
-			return socketConnect(bluetoothDevice);				
-		}
-	
 	}
 
 	

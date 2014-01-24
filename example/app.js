@@ -86,6 +86,10 @@ novarumbluetooth.enableBluetooth();
 			var item = section.getItemAt(e.itemIndex);
 			
 			alert("Connecting to: "+item.rowname.text);
+			
+			//use background service
+			novarumbluetooth.useService();
+			
 			novarumbluetooth.connect(item.rowmac.text);
 			
 		});			 
@@ -167,9 +171,24 @@ novarumbluetooth.enableBluetooth();
 		});					
 		
 		win.add(searchbutton);
+		
+		
+		
+		//Get data from intent//
+		var currActivity = Titanium.Android.currentActivity;
+		var arriveddata = "";
+		
+		if(currActivity != null)
+		{
+		   arriveddata = currActivity.getIntent().getStringExtra("BluetoothData");
+		}
+		
+		if(arriveddata !="")
+		{
+			alert(arriveddata);
+		}
 		 
 	  
 	}
 	
 win.open();	
-
