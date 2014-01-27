@@ -58,6 +58,7 @@ public class NovarumbluetoothModule extends KrollModule
     public String SERVERNAME                 = "NovarumBluetooth";
     public static NovarumbluetoothModule staticNovarumbluetoothModule;
     public boolean useService                = false;
+    TiIntentWrapper BluetoothServiceIntent = null;
     
 	// You can define constants with @Kroll.constant, for example:
 	// @Kroll.constant public static final String EXTERNAL_NAME = value;
@@ -321,9 +322,9 @@ public class NovarumbluetoothModule extends KrollModule
 				TiApplication appContext = TiApplication.getInstance();
 				Activity activity = appContext.getCurrentActivity();
 				
-				final TiIntentWrapper barcodeIntent = new TiIntentWrapper(new Intent(activity,BluetoothService.class));
-				barcodeIntent.getIntent().putExtra("MacAddress",devicemac);
-				appContext.startService(barcodeIntent.getIntent());
+				BluetoothServiceIntent = new TiIntentWrapper(new Intent(activity,BluetoothService.class));
+				BluetoothServiceIntent.getIntent().putExtra("MacAddress",devicemac);
+				appContext.startService(BluetoothServiceIntent.getIntent());
 				
 				return true;
 			}
@@ -407,8 +408,53 @@ public class NovarumbluetoothModule extends KrollModule
 	@Kroll.method
 	public boolean isConnected() 
 	{	
-		return isConnected;
+		if(useService)
+		  return BluetoothService.isConnected();
+		else		  
+		  return isConnected;
 	}
+	
+	@Kroll.method
+	public void Disconnect() 
+	{	
+		if(useService)
+		{
+			//Destroy Service//
+			try
+			{
+				TiApplication appContext = TiApplication.getInstance();
+			    appContext.stopService(BluetoothServiceIntent.getIntent());
+			}
+			catch(Exception e)
+			{
+				Log.w(TAG,"error on stopping the service: "+e.getMessage());
+			}
+		}
+		else
+		{
+			if(isConnected)
+			{
+			    try
+			    {
+					if(inputStream != null)
+					   inputStream.close();
+						
+					if(outputStream != null)
+					   outputStream.close();
+						
+					if(btsocket != null)
+					   btsocket.close();
+						
+						
+					isConnected = false;
+			    }
+			    catch(Exception e)
+			    {
+			       e.printStackTrace();
+			    }
+			}
+		}
+	}	
 	
 	
 	private void postError(String Error)

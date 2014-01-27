@@ -45,7 +45,7 @@ public class BluetoothService extends Service
      
      private static InputStream inputStream   = null;
      private static OutputStream outputStream = null;
-     public boolean isConnected               = false; 
+     public static boolean isConnected               = false; 
      public dataReceiver datareceiver;
      public AcceptThread acceptthread;
      public String SERVERNAME                 = "NovarumBluetooth";     
@@ -56,7 +56,12 @@ public class BluetoothService extends Service
 	{
 		Log.w(TAG,"Service Created");
 	}
-
+	
+	
+	public static boolean isConnected() 
+	{			  
+	    return isConnected;
+	}	
 	
 
 	@Override

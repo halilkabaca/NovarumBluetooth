@@ -27,6 +27,9 @@ The novarumbluetooth variable is a reference to the Module object.
 
 ## Reference
 
+### novarumbluetooth.Disconnect
+Disconnects from the bluetooth and if service is used, destroys the service
+
 ### novarumbluetooth.useService
 Enables the background service to be used for bluetooth communication. If this function is called, even when the application
 is not running bluetooth connection will be kept alive and on receiving data main activity will be started with the data (as intent extra)
