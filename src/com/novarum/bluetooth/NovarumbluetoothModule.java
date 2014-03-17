@@ -203,7 +203,10 @@ public class NovarumbluetoothModule extends KrollModule
 		    // Loop through paired devices
 		    for (BluetoothDevice device : pairedDevices) 
 		    {
-		    	result.put(device.getName(), device.getAddress());		    	
+		    	//Halilk: for some devices, device name is the same so put some of mac digits
+		    	String strDigitstoAdd = device.getAddress().substring(0,8);
+		    	strDigitstoAdd = strDigitstoAdd.replace(":","");
+		    	result.put(device.getName()+"_"+strDigitstoAdd, device.getAddress());		    	
 		    }
 		}
 		
