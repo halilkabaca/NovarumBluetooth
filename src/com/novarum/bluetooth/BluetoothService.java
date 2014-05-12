@@ -333,6 +333,42 @@ public class BluetoothService extends Service
 	}
 	
 	
+	
+	public static boolean sendData(String data) 
+	{
+		if (btsocket != null && isConnected == true) 
+		{
+			try 
+			{
+				outputStream.write(data.getBytes());
+				outputStream.flush();
+				
+				return true;
+				
+			} 
+			catch (Exception e) 
+			{
+				
+				//post error
+				KrollDict errdata = new KrollDict();
+				errdata.put("error",  e.getMessage());
+				NovarumbluetoothModule.sendEvent("nb_onError",errdata);
+				
+				return false;
+			}
+		}
+		else
+		{
+			//post error
+			KrollDict errdata = new KrollDict();
+			errdata.put("error",  "Not connected or data is null");
+			NovarumbluetoothModule.sendEvent("nb_onError",errdata);
+			
+			return false;
+		}
+	}
+	
+	
 	private void manageConnectedSocket()
 	{
 		try 

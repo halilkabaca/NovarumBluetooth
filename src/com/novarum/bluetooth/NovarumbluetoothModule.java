@@ -384,26 +384,33 @@ public class NovarumbluetoothModule extends KrollModule
 	@Kroll.method
 	public boolean sendData(String data) 
 	{
-		if (btsocket != null && isConnected == true) 
+		if(useService)
 		{
-			try 
-			{
-				outputStream.write(data.getBytes());
-				outputStream.flush();
-				
-				return true;
-				
-			} 
-			catch (Exception e) 
-			{
-				postError(e.getMessage());
-				return false;
-			}
+			  return BluetoothService.sendData(data);
 		}
 		else
 		{
-			postError("Not connected or data is null");
-			return false;
+			if (btsocket != null && isConnected == true) 
+			{
+				try 
+				{
+					outputStream.write(data.getBytes());
+					outputStream.flush();
+					
+					return true;
+					
+				} 
+				catch (Exception e) 
+				{
+					postError(e.getMessage());
+					return false;
+				}
+			}
+			else
+			{
+				postError("Not connected or data is null");
+				return false;
+			}
 		}
 	}	
 	
@@ -439,7 +446,9 @@ public class NovarumbluetoothModule extends KrollModule
 			{
 			    try
 			    {
-					if(inputStream != null)
+			    	isConnected = false;
+			    	
+			    	if(inputStream != null)
 					   inputStream.close();
 						
 					if(outputStream != null)
@@ -447,9 +456,7 @@ public class NovarumbluetoothModule extends KrollModule
 						
 					if(btsocket != null)
 					   btsocket.close();
-						
-						
-					isConnected = false;
+							
 			    }
 			    catch(Exception e)
 			    {
@@ -529,9 +536,20 @@ public class NovarumbluetoothModule extends KrollModule
 						
 						if(length > 0)
 						{
-							String ReceivedData = new String(data,0,length,"UTF-8");
+							String ReceivedData = null;
+							try
+							{
+							   ReceivedData = new String(data,0,length,"UTF-8");
+							}
+							catch(Exception e)
+							{
+							   Log.w(TAG,"Error on creating data script: "+e.getMessage());
+							}
 							
-							PostReceivedData(ReceivedData); // send received data to the app
+							if(ReceivedData != null)
+							{
+							   PostReceivedData(ReceivedData); // send received data to the app
+							}
 						}
 
 					} 
